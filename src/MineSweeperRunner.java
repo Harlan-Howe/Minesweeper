@@ -1,15 +1,15 @@
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
 
-public class MineSweeper extends JFrame 
+public class MineSweeperRunner extends JFrame
 {
 	public static void main(String[] args)
 	{
-		MineSweeper app = new MineSweeper();
+		MineSweeperRunner app = new MineSweeperRunner();
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public MineSweeper()
+	public MineSweeperRunner()
 	{
 		super("MineSweeper");
 		getContentPane().setLayout(new FlowLayout());
