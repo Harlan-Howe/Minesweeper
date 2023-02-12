@@ -158,20 +158,23 @@ public class MinePanel extends JPanel {
 		 * postcondition: the variable pressedSquare is set to the cell where the
 		 * button was pressed.
 		 */
-		public void mousePressed(MouseEvent me)
+		public void mousePressed(MouseEvent mEvt)
 		{
-			pressedSquare = mySquares[me.getX()/MineSquare.size]
-			                          [me.getY()/MineSquare.size];
+			int whichX = mEvt.getX()/MineSquare.size;
+			int whichY = mEvt.getY()/MineSquare.size;
+			if (whichX<0 || whichY<0 || whichX>=numCellsAcross || whichY>=numCellsDown)
+				return;
+			pressedSquare = mySquares[whichX][whichY];
 		}
 		/**
 		 * postcondition: if this is the same cell as when the button was pressed,
 		 * it will handle the action of clicking this cell.
 		 */
-		public void mouseReleased(MouseEvent me)
+		public void mouseReleased(MouseEvent mEvt)
 		{
-			System.out.println("Clicked.");
-			int whichX = me.getX()/MineSquare.size;
-			int whichY = me.getY()/MineSquare.size;
+			//System.out.println("Clicked.");
+			int whichX = mEvt.getX()/MineSquare.size;
+			int whichY = mEvt.getY()/MineSquare.size;
 			if (whichX<0 || whichY<0 || whichX>=numCellsAcross || whichY>=numCellsDown)
 				return;
 			MineSquare clickedSquare = mySquares[whichX][whichY];
@@ -180,14 +183,17 @@ public class MinePanel extends JPanel {
 				pressedSquare = null;
 				return;
 			}
-			if ((me.getModifiers()&MouseEvent.SHIFT_MASK)==MouseEvent.SHIFT_MASK)
+			// if this is a shift-click or right mouse button, toggle flag
+			if (((mEvt.getModifiers()&MouseEvent.SHIFT_MASK)==MouseEvent.SHIFT_MASK) ||
+					SwingUtilities.isRightMouseButton(mEvt))
 			{
 				if (clickedSquare.getMyStatus()==MineStatus.ORIGINAL)
 					clickedSquare.setMyStatus(MineStatus.FLAGGED);
 				else if (clickedSquare.getMyStatus()==MineStatus.FLAGGED)
 					clickedSquare.setMyStatus(MineStatus.ORIGINAL);
+				repaint();
 			}
-			else
+			else // normal (left) click
 			{
 				if (clickedSquare.hasAMine())
 				{
@@ -199,6 +205,7 @@ public class MinePanel extends JPanel {
 				{
 					checkForZeroes(whichX,whichY);
 					clickedSquare.setMyStatus(MineStatus.NUMBER_REVEALED);
+					repaint();
 				}
 			}
 			pressedSquare = null;
