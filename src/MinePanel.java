@@ -135,21 +135,23 @@ public class MinePanel extends JPanel {
 		repaint();
 	}
 	/**
-	 * precondition: the cell exists
+	 * precondition: None
 	 * postcondition: if this cell has zero mines in its neighborhood, it reveals
 	 * all its neighbors. Of course, if any of them have zero mines, they reveal 
 	 * their neighbors, too.
 	 */
 	public void checkForZeroes(int x, int y)
 	{
-		//TODO: this is the method you need to write!
+		//TODO: this is the recursive method you need to write!
 
 		// Hint: I can think of three base cases that you should consider for an (x,y) pair.
 		//     The order you consider them __will__ matter.
 
+		// at some point, you may need to change the status of the cell.
+
 		// suggestion: call all 8 neighbors, even if they might have non-zero neighbors
-		// or other issues. Let the base-cases decide whether to quickly return or
-		// do more.
+		// or other issues. Let the base-cases at the start of the method decide whether to
+		// quickly return or to do more.
 
 	}
 	public class clickListener extends MouseAdapter
@@ -184,7 +186,7 @@ public class MinePanel extends JPanel {
 				return;
 			}
 			// if this is a shift-click or right mouse button, toggle flag
-			if (((mEvt.getModifiers()&MouseEvent.SHIFT_MASK)==MouseEvent.SHIFT_MASK) ||
+			if (((mEvt.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)==MouseEvent.SHIFT_MASK) ||
 					SwingUtilities.isRightMouseButton(mEvt))
 			{
 				if (clickedSquare.getMyStatus()==MineStatus.ORIGINAL)
