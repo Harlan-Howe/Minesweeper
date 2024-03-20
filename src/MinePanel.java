@@ -186,7 +186,7 @@ public class MinePanel extends JPanel {
 				return;
 			}
 			// if this is a shift-click or right mouse button, toggle flag
-			if (((mEvt.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)==MouseEvent.SHIFT_MASK) ||
+			if (((mEvt.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)==MouseEvent.SHIFT_DOWN_MASK) ||
 					SwingUtilities.isRightMouseButton(mEvt))
 			{
 				if (clickedSquare.getMyStatus()==MineStatus.ORIGINAL)
