@@ -12,6 +12,7 @@ public class MinePanel extends JPanel {
 	public static final int NUM_MINES = 65;
 	private MineSquare[][] mySquares;
 	private MineSquare pressedSquare;
+	private boolean firstClick;
 	/**
 	 * Creates the mine panel, including a grid of (NUM_ROWS x NUM_COLS) MineSquares.
 	 *
@@ -30,6 +31,7 @@ public class MinePanel extends JPanel {
 		setRandomMines();
 		doNeighborCount();
 		addMouseListener(new clickListener());
+		firstClick = true;
 	}
 	
 	/**
@@ -132,6 +134,7 @@ public class MinePanel extends JPanel {
 		setRandomMines();
 		doNeighborCount();
 		pressedSquare=null;
+		firstClick = true;
 		repaint();
 	}
 	/**
@@ -219,6 +222,11 @@ public class MinePanel extends JPanel {
 			}
 			else // normal (left) click
 			{
+				if (firstClick && clickedSquare.hasAMine())
+				{
+					while (clickedSquare.hasAMine())
+						reset();
+				}
 				if (clickedSquare.hasAMine())
 				{
 					revealAllMines();
@@ -229,6 +237,7 @@ public class MinePanel extends JPanel {
 				{
 					checkForZeroes(whichCol,whichRow);
 					clickedSquare.setMyStatus(MineStatus.NUMBER_REVEALED);
+					firstClick = false;
 					repaint();
 
 				}
