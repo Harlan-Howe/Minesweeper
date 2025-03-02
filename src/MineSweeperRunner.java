@@ -14,7 +14,7 @@ public class MineSweeperRunner extends JFrame
 		super("MineSweeper");
 		getContentPane().setLayout(new FlowLayout());
 		getContentPane().add(new MinePanel());
-		setSize(MineSquare.size*MinePanel.numCellsAcross,MineSquare.size*MinePanel.numCellsDown+32);
+		setSize(MineSquare.size*MinePanel.NUM_CELLS_ACROSS,MineSquare.size*MinePanel.NUM_CELLS_DOWN +32);
 		setVisible(true);
 		setResizable(false);
 	}

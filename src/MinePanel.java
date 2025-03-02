@@ -7,9 +7,9 @@ import java.awt.event.*;
 
 public class MinePanel extends JPanel {
 
-	public static final int numCellsAcross = 20;
-	public static final int numCellsDown = 15;
-	public static final int numMines = 65;
+	public static final int NUM_CELLS_ACROSS = 20;
+	public static final int NUM_CELLS_DOWN = 15;
+	public static final int NUM_MINES = 65;
 	private MineSquare[][] mySquares;
 	private MineSquare pressedSquare;
 	/**
@@ -18,15 +18,15 @@ public class MinePanel extends JPanel {
 	 */
 	public MinePanel()
 	{
-		super(new GridLayout(numCellsDown,numCellsAcross));
-		mySquares = new MineSquare[numCellsAcross][numCellsDown];
-		for (int i=0; i<numCellsDown;i++)
-			for (int j=0; j<numCellsAcross; j++)
+		super(new GridLayout(NUM_CELLS_DOWN, NUM_CELLS_ACROSS));
+		mySquares = new MineSquare[NUM_CELLS_ACROSS][NUM_CELLS_DOWN];
+		for (int i = 0; i< NUM_CELLS_DOWN; i++)
+			for (int j = 0; j< NUM_CELLS_ACROSS; j++)
 			{
 				mySquares[j][i] = new MineSquare();
 				add(mySquares[j][i]);
 			}
-		setPreferredSize(new Dimension(numCellsAcross*MineSquare.size,numCellsDown*MineSquare.size));
+		setPreferredSize(new Dimension(NUM_CELLS_ACROSS *MineSquare.size, NUM_CELLS_DOWN *MineSquare.size));
 		setRandomMines();
 		doNeighborCount();
 		addMouseListener(new clickListener());
@@ -41,13 +41,13 @@ public class MinePanel extends JPanel {
 		Random generator = new Random();
 		int x, y;
 		boolean placed;
-		for (int n = 0; n<numMines; n++)
+		for (int n = 0; n< NUM_MINES; n++)
 		{
 			placed = false;
 			do
 			{
-				x = generator.nextInt(numCellsAcross);
-				y = generator.nextInt(numCellsDown);
+				x = generator.nextInt(NUM_CELLS_ACROSS);
+				y = generator.nextInt(NUM_CELLS_DOWN);
 				if (!mySquares[x][y].hasAMine())
 				{
 					mySquares[x][y].setMine(true);
@@ -65,8 +65,8 @@ public class MinePanel extends JPanel {
 	 */
 	public void doNeighborCount()
 	{
-		for (int i=0; i<numCellsAcross; i++)
-			for (int j=0; j<numCellsDown; j++)
+		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
+			for (int j = 0; j< NUM_CELLS_DOWN; j++)
 				countMyNeighbors(i,j);
 	}
 	
@@ -78,7 +78,7 @@ public class MinePanel extends JPanel {
 	 */
 	private boolean locationHasMine(int x, int y)
 	{
-		if ((x>=0)&&(x<numCellsAcross)&&(y>=0)&&(y<numCellsDown))
+		if ((x>=0)&&(x< NUM_CELLS_ACROSS)&&(y>=0)&&(y< NUM_CELLS_DOWN))
 			return mySquares[x][y].hasAMine();
 		return false;
 	}
@@ -107,8 +107,8 @@ public class MinePanel extends JPanel {
 	 */
 	public void revealAllMines()
 	{
-		for (int i=0; i<numCellsAcross; i++)
-			for (int j=0; j<numCellsDown; j++)
+		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
+			for (int j = 0; j< NUM_CELLS_DOWN; j++)
 				if (mySquares[i][j].hasAMine())
 					if (mySquares[i][j].getMyStatus()==MineStatus.FLAGGED)
 						mySquares[i][j].setMyStatus(MineStatus.BOMB_REVEALED);
@@ -124,8 +124,8 @@ public class MinePanel extends JPanel {
 	 */
 	public void reset()
 	{
-		for (int i=0; i<numCellsAcross; i++)
-			for (int j=0; j<numCellsDown; j++)
+		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
+			for (int j = 0; j< NUM_CELLS_DOWN; j++)
 			{	mySquares[i][j].setMyStatus(MineStatus.ORIGINAL);
 				mySquares[i][j].setMine(false);
 			}
@@ -164,7 +164,7 @@ public class MinePanel extends JPanel {
 		{
 			int whichX = mEvt.getX()/MineSquare.size;
 			int whichY = mEvt.getY()/MineSquare.size;
-			if (whichX<0 || whichY<0 || whichX>=numCellsAcross || whichY>=numCellsDown)
+			if (whichX<0 || whichY<0 || whichX>= NUM_CELLS_ACROSS || whichY>= NUM_CELLS_DOWN)
 				return;
 			pressedSquare = mySquares[whichX][whichY];
 		}
@@ -177,7 +177,7 @@ public class MinePanel extends JPanel {
 			//System.out.println("Clicked.");
 			int whichX = mEvt.getX()/MineSquare.size;
 			int whichY = mEvt.getY()/MineSquare.size;
-			if (whichX<0 || whichY<0 || whichX>=numCellsAcross || whichY>=numCellsDown)
+			if (whichX<0 || whichY<0 || whichX>= NUM_CELLS_ACROSS || whichY>= NUM_CELLS_DOWN)
 				return;
 			MineSquare clickedSquare = mySquares[whichX][whichY];
 			if (clickedSquare != pressedSquare)
