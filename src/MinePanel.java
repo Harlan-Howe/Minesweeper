@@ -19,12 +19,12 @@ public class MinePanel extends JPanel {
 	public MinePanel()
 	{
 		super(new GridLayout(NUM_CELLS_DOWN, NUM_CELLS_ACROSS));
-		mySquares = new MineSquare[NUM_CELLS_ACROSS][NUM_CELLS_DOWN];
-		for (int i = 0; i< NUM_CELLS_DOWN; i++)
-			for (int j = 0; j< NUM_CELLS_ACROSS; j++)
+		mySquares = new MineSquare[NUM_CELLS_DOWN][NUM_CELLS_ACROSS];
+		for (int row = 0; row< NUM_CELLS_DOWN; row++)
+			for (int col = 0; col< NUM_CELLS_ACROSS; col++)
 			{
-				mySquares[j][i] = new MineSquare();
-				add(mySquares[j][i]);
+				mySquares[row][col] = new MineSquare();
+				add(mySquares[row][col]);
 			}
 		setPreferredSize(new Dimension(NUM_CELLS_ACROSS *MineSquare.size, NUM_CELLS_DOWN *MineSquare.size));
 		setRandomMines();
@@ -39,18 +39,18 @@ public class MinePanel extends JPanel {
 	public void setRandomMines()
 	{
 		Random generator = new Random();
-		int x, y;
+		int col, row;
 		boolean placed;
 		for (int n = 0; n< NUM_MINES; n++)
 		{
 			placed = false;
 			do
 			{
-				x = generator.nextInt(NUM_CELLS_ACROSS);
-				y = generator.nextInt(NUM_CELLS_DOWN);
-				if (!mySquares[x][y].hasAMine())
+				col = generator.nextInt(NUM_CELLS_ACROSS);
+				row = generator.nextInt(NUM_CELLS_DOWN);
+				if (!mySquares[row][col].hasAMine())
 				{
-					mySquares[x][y].setMine(true);
+					mySquares[row][col].setMine(true);
 					placed = true;
 				}
 				//System.out.println("("+x+", "+y+")");
@@ -65,9 +65,9 @@ public class MinePanel extends JPanel {
 	 */
 	public void doNeighborCount()
 	{
-		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
-			for (int j = 0; j< NUM_CELLS_DOWN; j++)
-				countMyNeighbors(i,j);
+		for (int col = 0; col< NUM_CELLS_ACROSS; col++)
+			for (int row = 0; row< NUM_CELLS_DOWN; row++)
+				countMyNeighbors(row,col);
 	}
 	
 	/**
@@ -76,10 +76,10 @@ public class MinePanel extends JPanel {
 	 * in the range of the grid.
 	 * @return true if there is a mine at this location; false if there is no mine or if (x,y) is out of bounds.
 	 */
-	private boolean locationHasMine(int x, int y)
+	private boolean locationHasMine(int row, int col)
 	{
-		if ((x>=0)&&(x< NUM_CELLS_ACROSS)&&(y>=0)&&(y< NUM_CELLS_DOWN))
-			return mySquares[x][y].hasAMine();
+		if ((col>=0)&&(col< NUM_CELLS_ACROSS)&&(row>=0)&&(row< NUM_CELLS_DOWN))
+			return mySquares[row][col].hasAMine();
 		return false;
 	}
 	
@@ -88,16 +88,16 @@ public class MinePanel extends JPanel {
 	 * Postcondition: the cell now knows how many mines [0...8] are in its 
 	 * immediate neighborhood. 
 	 */
-	private void countMyNeighbors(int x, int y)
+	private void countMyNeighbors(int row, int col)
 	{
 		int count = 0;
 		for (int i=-1;i<2; i++)
 			for (int j=-1;j<2;j++)
-				if (locationHasMine(x+i,y+j))
+				if (locationHasMine(row+i,col+j))
 					count++;
-		if (locationHasMine(x,y))
+		if (locationHasMine(row,col))
 			count--;
-		mySquares[x][y].setNeighboringMines(count);
+		mySquares[row][col].setNeighboringMines(count);
 	}	
 	
 	/**
@@ -107,13 +107,13 @@ public class MinePanel extends JPanel {
 	 */
 	public void revealAllMines()
 	{
-		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
-			for (int j = 0; j< NUM_CELLS_DOWN; j++)
-				if (mySquares[i][j].hasAMine())
-					if (mySquares[i][j].getMyStatus()==MineStatus.FLAGGED)
-						mySquares[i][j].setMyStatus(MineStatus.BOMB_REVEALED);
+		for (int col = 0; col< NUM_CELLS_ACROSS; col++)
+			for (int row = 0; row< NUM_CELLS_DOWN; row++)
+				if (mySquares[row][col].hasAMine())
+					if (mySquares[row][col].getMyStatus()==MineStatus.FLAGGED)
+						mySquares[row][col].setMyStatus(MineStatus.BOMB_REVEALED);
 					else
-						mySquares[i][j].setMyStatus(MineStatus.EXPLODED);
+						mySquares[row][col].setMyStatus(MineStatus.EXPLODED);
 		repaint();
 	}
 	/**
@@ -124,10 +124,10 @@ public class MinePanel extends JPanel {
 	 */
 	public void reset()
 	{
-		for (int i = 0; i< NUM_CELLS_ACROSS; i++)
-			for (int j = 0; j< NUM_CELLS_DOWN; j++)
-			{	mySquares[i][j].setMyStatus(MineStatus.ORIGINAL);
-				mySquares[i][j].setMine(false);
+		for (int col = 0; col< NUM_CELLS_ACROSS; col++)
+			for (int row = 0; row< NUM_CELLS_DOWN; row++)
+			{	mySquares[row][col].setMyStatus(MineStatus.ORIGINAL);
+				mySquares[row][col].setMine(false);
 			}
 		setRandomMines();
 		doNeighborCount();
@@ -140,7 +140,7 @@ public class MinePanel extends JPanel {
 	 * all its neighbors. Of course, if any of them have zero mines, they reveal 
 	 * their neighbors, too.
 	 */
-	public void checkForZeroes(int x, int y)
+	public void checkForZeroes(int row, int col)
 	{
 		//TODO: this is the recursive method you need to write!
 
@@ -154,6 +154,28 @@ public class MinePanel extends JPanel {
 		// quickly return or to do more.
 
 	}
+
+	/**
+	 * determines whether the user has successfully identified all the cells.
+	 * @return - whether the user has met the condition to win.
+	 */
+	public boolean checkForWin()
+	{
+		int count_of_revealed = 0;
+		int count_of_flagged = 0;
+		for (int row=0; row<NUM_CELLS_DOWN; row++)
+			for (int col=0; col<NUM_CELLS_ACROSS; col++)
+			{
+				if (mySquares[row][col].getMyStatus() == MineStatus.NUMBER_REVEALED)
+					count_of_revealed++;
+				if (mySquares[row][col].getMyStatus() == MineStatus.FLAGGED)
+					count_of_flagged++;
+			}
+
+		return (count_of_revealed == NUM_CELLS_ACROSS * NUM_CELLS_DOWN - NUM_MINES) &&
+				(count_of_flagged == NUM_MINES);
+	}
+
 	public class clickListener extends MouseAdapter
 	{
 		/**
@@ -162,11 +184,11 @@ public class MinePanel extends JPanel {
 		 */
 		public void mousePressed(MouseEvent mEvt)
 		{
-			int whichX = mEvt.getX()/MineSquare.size;
-			int whichY = mEvt.getY()/MineSquare.size;
-			if (whichX<0 || whichY<0 || whichX>= NUM_CELLS_ACROSS || whichY>= NUM_CELLS_DOWN)
+			int whichCol = mEvt.getX()/MineSquare.size;
+			int whichRow = mEvt.getY()/MineSquare.size;
+			if (whichCol<0 || whichRow<0 || whichCol>= NUM_CELLS_ACROSS || whichRow>= NUM_CELLS_DOWN)
 				return;
-			pressedSquare = mySquares[whichX][whichY];
+			pressedSquare = mySquares[whichRow][whichCol];
 		}
 		/**
 		 * postcondition: if this is the same cell as when the button was pressed,
@@ -175,18 +197,18 @@ public class MinePanel extends JPanel {
 		public void mouseReleased(MouseEvent mEvt)
 		{
 			//System.out.println("Clicked.");
-			int whichX = mEvt.getX()/MineSquare.size;
-			int whichY = mEvt.getY()/MineSquare.size;
-			if (whichX<0 || whichY<0 || whichX>= NUM_CELLS_ACROSS || whichY>= NUM_CELLS_DOWN)
+			int whichCol = mEvt.getX()/MineSquare.size;
+			int whichRow = mEvt.getY()/MineSquare.size;
+			if (whichCol<0 || whichRow<0 || whichCol>= NUM_CELLS_ACROSS || whichRow>= NUM_CELLS_DOWN)
 				return;
-			MineSquare clickedSquare = mySquares[whichX][whichY];
+			MineSquare clickedSquare = mySquares[whichRow][whichCol];
 			if (clickedSquare != pressedSquare)
 			{
 				pressedSquare = null;
 				return;
 			}
 			// if this is a shift-click or right mouse button, toggle flag
-			if (((mEvt.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)==MouseEvent.SHIFT_MASK) ||
+			if (((mEvt.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)==MouseEvent.SHIFT_DOWN_MASK) ||
 					SwingUtilities.isRightMouseButton(mEvt))
 			{
 				if (clickedSquare.getMyStatus()==MineStatus.ORIGINAL)
@@ -205,12 +227,18 @@ public class MinePanel extends JPanel {
 				}
 				else
 				{
-					checkForZeroes(whichX,whichY);
+					checkForZeroes(whichCol,whichRow);
 					clickedSquare.setMyStatus(MineStatus.NUMBER_REVEALED);
 					repaint();
+
 				}
 			}
 			pressedSquare = null;
+			if (checkForWin())
+			{
+				JOptionPane.showMessageDialog(null, "You win!", "Congratulations", JOptionPane.INFORMATION_MESSAGE);
+				reset();
+			}
 		}
 	}
 }
