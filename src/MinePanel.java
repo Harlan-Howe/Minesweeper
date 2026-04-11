@@ -235,7 +235,7 @@ public class MinePanel extends JPanel {
 				}
 				else
 				{
-					checkForZeroes(whichCol,whichRow);
+					checkForZeroes(whichRow,whichCol);
 					clickedSquare.setMyStatus(MineStatus.NUMBER_REVEALED);
 					firstClick = false;
 					repaint();
